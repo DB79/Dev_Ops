@@ -1,10 +1,10 @@
-import { NodejsAngularHerokuPage } from './app.po';
+import { MeanContactlistAngular2Page } from './app.po';
 
-describe('nodejs-angular-heroku App', () => {
-  let page: NodejsAngularHerokuPage;
+describe('mean-contactlist-angular2 App', function() {
+  let page: MeanContactlistAngular2Page;
 
   beforeEach(() => {
-    page = new NodejsAngularHerokuPage();
+    page = new MeanContactlistAngular2Page();
   });
 
   it('should display message saying app works', () => {

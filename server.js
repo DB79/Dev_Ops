@@ -1,35 +1,124 @@
-const path = require('path');
-const express = require('express');
-const app = express();
+var express = require("express");
+var bodyParser = require("body-parser");
+var mongodb = require("mongodb");
+var ObjectID = mongodb.ObjectID;
 
-// If an incoming request uses
-// a protocol other than HTTPS,
-// redirect that request to the
-// same url but with HTTPS
-const forceSSL = function() {
-  return function (req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
-      return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    }
-    next();
-  }
-}
+var CONTACTS_COLLECTION = "contacts";
 
-// Instruct the app
-// to use the forceSSL
-// middleware
-app.use(forceSSL());
+var app = express();
+app.use(bodyParser.json());
 
-// Run the app by serving the static files
-// in the dist directory
-app.use(express.static(__dirname + '/dist'));
+// Create link to Angular build directory
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
 
-// For all GET requests, send back index.html
-// so that PathLocationStrategy can be used
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/dist/index.html'));
+  var server = app.listen(process.env.PORT || 8080, function () {
+    var port = server.address().port;
+    console.log("App now running on port", port);
+  });
+
+// // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
+// var db;
+
+// var connection ='mongodb://http:bf9d13bc.ngrok.io/clicks';
+// // 9441a0ba.ngrok.io
+// //http://bf9d13bc.ngrok.io
+// //mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
+
+// // Connect to the database before starting the application server.
+// mongodb.MongoClient.connect(connection, function (err, database) {
+//   if (err) {
+//     console.log(err);
+//     process.exit(1);
+//   }
+
+//   // Save database object from the callback for reuse.
+//   db = database;
+//   console.log("Database connection ready");
+
+//   // Initialize the app.
+//   var server = app.listen(process.env.PORT || 8080, function () {
+//     var port = server.address().port;
+//     console.log("App now running on port", port);
+//   });
+// });
+
+// // CONTACTS API ROUTES BELOW
+
+// // Generic error handler used by all endpoints.
+// function handleError(res, reason, message, code) {
+//   console.log("ERROR: " + reason);
+//   res.status(code || 500).json({"error": message});
+// }
+
+// /*  "/api/contacts"
+//  *    GET: finds all contacts
+//  *    POST: creates a new contact
+//  */
+
+app.get("/api/contacts", function(req, res) {
+//   db.collection(CONTACTS_COLLECTION).find({}).toArray(function(err, docs) {
+//     if (err) {
+//       handleError(res, err.message, "Failed to get contacts.");
+//     } else {
+//       res.status(200).json(docs);
+//     }
+//   });
 });
 
-// Start the app by listening on the default
-// Heroku port
-app.listen(process.env.PORT || 8080);
+app.post("/api/contacts", function(req, res) {
+//   var newContact = req.body;
+//   newContact.createDate = new Date();
+
+//   if (!req.body.name) {
+//     handleError(res, "Invalid user input", "Must provide a name.", 400);
+//   }
+
+//   db.collection(CONTACTS_COLLECTION).insertOne(newContact, function(err, doc) {
+//     if (err) {
+//       handleError(res, err.message, "Failed to create new contact.");
+//     } else {
+//       res.status(201).json(doc.ops[0]);
+//     }
+//   });
+});
+
+// /*  "/api/contacts/:id"
+//  *    GET: find contact by id
+//  *    PUT: update contact by id
+//  *    DELETE: deletes contact by id
+//  */
+
+app.get("/api/contacts/:id", function(req, res) {
+//   db.collection(CONTACTS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+//     if (err) {
+//       handleError(res, err.message, "Failed to get contact");
+//     } else {
+//       res.status(200).json(doc);
+//     }
+//   });
+});
+
+app.put("/api/contacts/:id", function(req, res) {
+//   var updateDoc = req.body;
+//   delete updateDoc._id;
+
+//   db.collection(CONTACTS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+//     if (err) {
+//       handleError(res, err.message, "Failed to update contact");
+//     } else {
+//       updateDoc._id = req.params.id;
+//       res.status(200).json(updateDoc);
+//     }
+//   });
+});
+
+app.delete("/api/contacts/:id", function(req, res) {
+//   db.collection(CONTACTS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+//     if (err) {
+//       handleError(res, err.message, "Failed to delete contact");
+//     } else {
+//       res.status(200).json(req.params.id);
+//     }
+//   });
+});

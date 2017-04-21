@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class NodejsAngularHerokuPage {
+export class MeanContactlistAngular2Page {
   navigateTo() {
     return browser.get('/');
   }
